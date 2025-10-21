@@ -46,28 +46,45 @@ app.post("/signup", async (req, res) => {
         console.log("Before result.data", result.data);
             const { email, password, username, dob, firstname, lastname, country, language } = result.data;
 
+            const existingUser = await userDetailsModel.findOne({ username });
+            if(existingUser){
+                res.json({
+                    message: "User with this name already exits..."
+                });
+            }
+
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await  bcrypt.hash(password, salt);
+
         console.log("After result.data and before saving it in DB");
-
-            const savingDetails =  await userDetailsModel.create({
-                email,
-                password,
-                username,
-                dob,
-                firstname,
-                lastname,
-                country,
-                language
-            });
-
-        console.log("After saving it in DB");
-
-            res.json({
-                message: "Details recieved",
-                userDetailsModel:{
-                    email: savingDetails.username
-                }
-            });
-            console.log(email);
+            try{
+                const savingDetails =  await userDetailsModel.create({
+                    email,
+                    password: hashedPassword,
+                    username,
+                    dob,
+                    firstname,
+                    lastname,
+                    country,
+                    language
+                });
+                
+                console.log("After saving it in DB");
+                
+                res.json({
+                    message: "Details recieved",
+                    userDetailsModel:{
+                        email: savingDetails.username
+                    }
+                });
+                console.log(email);
+            }
+            catch(e){
+                res.json({
+                    message: "Duplicate details are not allowed"
+                });
+                console.error(e);
+            }        
         }
     }catch(e){
         console.error(e);
