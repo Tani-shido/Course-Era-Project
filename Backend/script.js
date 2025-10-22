@@ -7,15 +7,23 @@ app.use(express.json());
 // To validate data
 const { z } = require("zod");
 
+// To return jwt as response
+const jsonwebtoken = require("jsonwebtoken");
+
 // To incrypt data
 const bcrypt = require("bcrypt");
+
+// To store confidential info
+require("dotenv").config();
 
 // To save the data in DB
 const mongoose = require("mongoose");
 const { userDetailsModel } = require("./db");
-const MONGO_URL = "mongodb+srv://shikaridota777:ZClPvfWjJINgzaFN@cluster0.12wqhve.mongodb.net/Course-Era-Project";
+const { error } = require("console");
+// const MONGO_URL = process.env.MONGO_URL;
+
 // To connect to DB
-mongoose.connect(MONGO_URL).then(()=>console.log("DB connected sucessfully")).catch(err => console.error("DB connection error", err));
+mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully")).catch(err => console.error("DB connection error", err));
 
 // To get and validate data
     const formSchema = z.object({
@@ -29,21 +37,24 @@ mongoose.connect(MONGO_URL).then(()=>console.log("DB connected sucessfully")).ca
         language: z.string().min(1)
     });
 
-// Post route: to take form inputs, validate it, and saves it.
+// signup Post route: to take form inputs, validate it, and saves it.
 app.post("/signup", async (req, res) => {
     try{
 
     console.log("Before safe parsing");
+
         const result = formSchema.safeParse(req.body);
+        
     console.log("After safe parsing");
+
         if(!result.success){
             res.json({
-                message: "Enter correct details",
+                message: "Enter correct details.....result.data not safe parsed sucessfully",
                 errors: result.error.issues
         });
         }
         else{
-        console.log("Before result.data", result.data);
+        console.log("result.data safe parsed sucessfully", result.data);
             const { email, password, username, dob, firstname, lastname, country, language } = result.data;
 
             const existingUser = await userDetailsModel.findOne({ username });
@@ -54,9 +65,10 @@ app.post("/signup", async (req, res) => {
             }
 
             const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await  bcrypt.hash(password, salt);
+            const hashedPassword = await bcrypt.hash(password, salt);
 
-        console.log("After result.data and before saving it in DB");
+        console.log("Before saving it in DB");
+
             try{
                 const savingDetails =  await userDetailsModel.create({
                     email,
@@ -95,6 +107,78 @@ app.post("/signup", async (req, res) => {
     }
 });
 
+const loginSchema = z.object({
+    emailName: z.string().min(1),
+    password: z.string().min(1)
+});
+
+// login Post route: to take inputs, validate, generate jwt token, logs-in
+app.post("/login", async(req, res) => {
+    try{
+        
+        console.log("Before safe parsing");
+
+        const emailNamePass = loginSchema.safeParse(req.body);
+
+        console.log("After safe parsing");
+
+            if(!emailNamePass.success){
+                res.json({
+                    message: "Details either not recieved or in wrong format"
+                });
+                console.log("Details either not recieved or in wrong format");
+            }else{
+
+                console.log("Details recieved");
+
+                const { emailName, password } = emailNamePass.data;
+
+                console.log("Details: ", emailName, password);
+
+                const findUser = await userDetailsModel.findOne({
+                    $or: [
+                        { email: emailName },
+                        { username: emailName }
+                    ]
+                });
+
+                console.log("User found");
+
+                if(!findUser){
+                    res.json({
+                        message: "Wrong email address or username"
+                    });
+                    console.log("Wrong email address or username");
+                }else{
+
+                    console.log("Before password check");
+
+                    const passCheck = await bcrypt.compare(password, findUser.password);
+
+                    if(!passCheck){
+                        res.json({
+                            message: "Wrong email or username"
+                        });
+                        console.log("Wrong email or username");
+                    }else{
+                        res.json({
+                            message: "Congratulations! You are logged in"
+                        });
+                        console.log("Congratulations! You are logged in")
+                    }
+
+                    // Sign a token: AUTH begins tomorrow
+                    
+                }
+            }
+
+    }catch(e){
+        res.json({
+            message: "Parsing error"
+        });
+        console.error("Parsing error", error);
+    }
+});
 
 app.listen(3000);
 console.log("Server is running");
