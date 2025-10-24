@@ -8,7 +8,8 @@ app.use(express.json());
 const { z } = require("zod");
 
 // To return jwt as response
-const jsonwebtoken = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");   
+const JWT_SECRET_KEY = "secret";
 
 // To incrypt data
 const bcrypt = require("bcrypt");
@@ -25,7 +26,7 @@ const { error } = require("console");
 // To connect to DB
 mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully")).catch(err => console.error("DB connection error", err));
 
-// To get and validate data
+// To get and validate Form data
     const formSchema = z.object({
         email: z.string().email({message: "Invalid email address"}),
         password: z.string().min(8, { message: "Must be 8 characters long" }).max(16, { message: "Maximum 16 characters" }),
@@ -107,6 +108,7 @@ app.post("/signup", async (req, res) => {
     }
 });
 
+// To get and validate, Login data
 const loginSchema = z.object({
     emailName: z.string().min(1),
     password: z.string().min(1)
@@ -161,14 +163,17 @@ app.post("/login", async(req, res) => {
                         });
                         console.log("Wrong email or username");
                     }else{
+
+                        const token = jwt.sign({ emailName, password }, JWT_SECRET_KEY);
+
+                        console.log("Token is : ", token);
+
                         res.json({
-                            message: "Congratulations! You are logged in"
+                            message: "Congratulations! You are logged in",
+                            token
                         });
                         console.log("Congratulations! You are logged in")
-                    }
-
-                    // Sign a token: AUTH begins tomorrow
-                    
+                    }                    
                 }
             }
 
@@ -180,5 +185,6 @@ app.post("/login", async(req, res) => {
     }
 });
 
+// 
 app.listen(3000);
 console.log("Server is running");
