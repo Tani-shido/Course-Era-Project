@@ -185,6 +185,15 @@ app.post("/login", async(req, res) => {
     }
 });
 
-// 
+//Post route to get user ed-info 
+app.post("/user-info", async (res, req) => {
+    // hi there
+});
+
+// Post route to get creator ed-info
+app.post("/creator-info", async (res, req) => {
+    // hello there
+});
+
 app.listen(3000);
 console.log("Server is running");
