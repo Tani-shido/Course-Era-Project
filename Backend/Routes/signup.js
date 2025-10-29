@@ -11,7 +11,7 @@ const { z, safeParse } = require("zod");
 
 // To return jwt as response
 const jwt = require("jsonwebtoken");   
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+const JWT_SECRET_KEY = process.env.JWT_SECRET;
 
 // To incrypt data
 const bcrypt = require("bcrypt");

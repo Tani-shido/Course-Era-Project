@@ -32,50 +32,8 @@ app.use("/auth", signupRoute);
 const loginRoute = require("./Routes/login.js");
 app.use("/auth", loginRoute);
 
-// To get and validate, user ed-data
-const userEdDataSchema = z.object({
-    role: z.enum(["user", "creator"]),
-    nameOfInstitue: z.string().min(1),
-    ifDroppedOrComplete: z.enum(["Pursuing", "Dropped-Out", "Completed", "Others"]),
-    lastEducation: z.string().min(1),
-    grade: z.string().min(1)
-});
-
-//Post route to get user ed-info 
-app.post("/education-info", async (req, res) => {
-    try{
-        const userEducation = userEdDataSchema.safeParse(req.body);
-
-        if(!userEducation.success){
-            res.json({
-                message: "Data not parsed sucessfully"
-            });
-        }
-        else{
-            console.log(userEducation.data);
-
-            const userEducationUpdation = await AccountModel.insertOne({ 
-                institute: userEducation.nameOfInstitue,
-                status: userEducation.ifDroppedOrComplete,
-                education: userEducation.lastEducation,
-                grade: userEducation.grade
-            });
-
-            res.json({
-                message: "Data parsed sucessfully",
-                AccountModel: {
-                    userEducationUpdation: userEducation._id
-                }
-            });
-        }
-
-    }catch(err){
-        res.json({
-            message: "Details not recieved"
-        });
-        console.error(err);
-    }
-});
+const educationRoute = require("./Routes/education.js");
+app.use("/auth", educationRoute);
 
 // Post route to get creator ed-info
 app.post("/creator-info", async (res, req) => {
