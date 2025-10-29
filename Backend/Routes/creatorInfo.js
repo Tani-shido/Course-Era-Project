@@ -30,41 +30,43 @@ const { error } = require("console");
 mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully in education")).catch(err => console.error("DB connection error: ", err));
 
 // To get and validate, user ed-data
-const userEdDataSchema = z.object({
+const creatorEdDataSchema = z.object({
     nameOfInstitue: z.string().min(1),
     ifDroppedOrComplete: z.enum(["Pursuing", "Dropped-Out", "Completed", "Others"]),
     lastEducation: z.string().min(1),
-    grade: z.string().min(1)
+    grade: z.string().min(1),
+    currentOccupation: z.string().min(1)
 });
 
-//Post route to get user ed-info 
-router.put("/education-Info", authMiddleware , async (req, res) => {
-    const userEducation = userEdDataSchema.safeParse(req.body);
+// Post route to get creator ed-info
+router.put("/Creator-Info", authMiddleware , async (req, res) => {
+    const creatorEducation = creatorEdDataSchema.safeParse(req.body);
     
-    if(!userEducation.success){
+    if(!creatorEducation.success){
         res.json({
             message: "Data not parsed sucessfully"
         });
     }
     else{
-        console.log(userEducation.data);
+        console.log(creatorEducation.data);
         
         try{
             
-                const { nameOfInstitue, ifDroppedOrComplete, lastEducation, grade } = userEducation.data;
+                const { nameOfInstitue, ifDroppedOrComplete, lastEducation, grade, currentOccupation } = creatorEducation.data;
                 
-                const updatedUser = await AccountModel.updateOne(req.user._id, {
+                const updatedCreator = await AccountModel.updateOne(req.user._id, {
                     $set: { 
                         "education.institute": nameOfInstitue,
                         "education.status": ifDroppedOrComplete,
                         "education.education": lastEducation,
-                        "education.grade": grade
+                        "education.grade": grade,
+                        "education.Occupation": currentOccupation
                     }
             }, { new: true }).select("-password");
 
             res.json({
                 message: "Data parsed sucessfully",
-                user: updatedUser
+                user: updatedCreator
             });
         }
 

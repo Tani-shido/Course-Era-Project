@@ -32,14 +32,11 @@ app.use("/auth", signupRoute);
 const loginRoute = require("./Routes/login.js");
 app.use("/auth", loginRoute);
 
-const educationRoute = require("./Routes/education.js");
-app.use("/auth", educationRoute);
+const userInfoRoute = require("./Routes/userInfo.js");
+app.use("/auth", userInfoRoute);
 
-// Post route to get creator ed-info
-app.post("/creator-info", async (res, req) => {
-    // hello there
-});
-
+const creatorInfoRoute = require("./Routes/userInfo.js");
+app.use("/auth", creatorInfoRoute);
 
 
 
