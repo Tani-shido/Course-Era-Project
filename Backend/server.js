@@ -38,6 +38,9 @@ app.use("/auth", userInfoRoute);
 const creatorInfoRoute = require("./Routes/userInfo.js");
 app.use("/auth", creatorInfoRoute);
 
+const foiRoute = require("./Routes/foi.js");
+app.use("/auth",  foiRoute);
+
 
 
 
