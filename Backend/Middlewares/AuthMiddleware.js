@@ -16,40 +16,46 @@ const authMiddleware = async (req, res, next) => {
         console.log("auth middleware");
         
         const headerToken = req.headers.token;
+
+        console.log(headerToken);
         
         if(!headerToken || !headerToken.startswith("Bearer ")){
             res.json({
                 message: "token missing"
-            })
+            });
             console.log("token missing");
         }
-
-        const token = headerToken.split(' ')[1];
-
-        try{
-
-            const decoded = jwt.verify(token, JWT_SECRET_KEY);
+        else{
             
-            console.log("Decoded thing: ", decoded);
+            console.log("headerToken is correct");
             
-            req.user = AccountModel.findById(decoded.userId).select("-password");
+            const token = headerToken.split(' ')[1];
             
-            console.log("This is the user: ", req.user.model);
-
-            if(!req.user){
-                res.json({
-                    message: "User not found"
-                });
-                console.log("User nahi mil raha");
+            try{
+                
+                const decoded = jwt.verify(token, JWT_SECRET_KEY);
+                
+                console.log("Decoded thing: ", decoded);
+                
+                req.user = AccountModel.findById(decoded.userId).select("-password");
+                
+                console.log("This is the user: ", req.user.model);
+                
+                if(!req.user){
+                    res.json({
+                        message: "User not found"
+                    });
+                    console.log("User nahi mil raha");
+                }
             }
+            catch(e){
+                res.json({
+                    message: "Token galat batara miya"
+                });
+            }
+            
+            next();
         }
-        catch(e){
-            res.json({
-                message: "Token galat batara miya"
-            });
-        }
-
-        next();
     }
     catch(e){
         res.json({

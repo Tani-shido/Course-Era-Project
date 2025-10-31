@@ -27,7 +27,7 @@ const { AccountModel } = require("../Models/AccountModel");
 const { error } = require("console");
 
 // To connect to DB
-mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully in education")).catch(err => console.error("DB connection error: ", err));
+mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully in User")).catch(err => console.error("DB connection error: ", err));
 
 // To get and validate, user ed-data
 const userEdDataSchema = z.object({

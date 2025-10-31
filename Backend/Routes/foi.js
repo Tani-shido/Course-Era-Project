@@ -27,7 +27,7 @@ const { AccountModel } = require("../Models/AccountModel");
 const { error } = require("console");
 
 // To connect to DB
-mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully in education")).catch(err => console.error("DB connection error: ", err));
+mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully in FOI")).catch(err => console.error("DB connection error: ", err));
 
 // To get and validate, user ed-data
 const foiSchema = z.object({
@@ -50,19 +50,22 @@ router.put("/foi", authMiddleware , async (req, res) => {
             try{
                 const field = fieldInfo.data;
 
-                const updateField = await AccountModel.updateOne({
-                    
-                })
+                const AddField = await AccountModel.updateOne(req.user._id, {
+                    $set: {
+                        "FieldOfInterest": field
+                    }
+                }, { new: true }).select("-password");
 
+                res.json({
+                    message: "Field of interests are saved in DB",
+                    AddField
+                });
 
             }catch(e){
                 res.json({
-                    message: ""
-                })
+                    message: "Field of interests are not saved in DB"
+                });
             }
-            res.json({
-                message: "Fields of interest are not recieved"
-            });
         }
     }
     catch(e){
