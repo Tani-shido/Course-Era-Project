@@ -7,7 +7,7 @@ app.use(express.json());
 const router = express.Router();
 
 // To validate data
-const { z, safeParse } = require("zod");
+const { z, safeParse, array } = require("zod");
 
 // To return jwt as response
 const jwt = require("jsonwebtoken");   
@@ -31,12 +31,48 @@ mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected suces
 
 // To get and validate, user ed-data
 const foiSchema = z.object({
-
+    fields: z.array(z.string().min(1)).min(3)
 });
 
 // Post route to get creator ed-info
 router.put("/foi", authMiddleware , async (req, res) => {
-    
+    try{
+        const fieldInfo = foiSchema.safeParse(req.body);
+
+        if(fieldInfo.success){
+            res.json({
+                message: "Fields of interest are not recieved"
+            });
+        }
+        else{
+            console.log(fieldInfo.data);
+
+            try{
+                const field = fieldInfo.data;
+
+                const updateField = await AccountModel.updateOne({
+                    
+                })
+
+
+            }catch(e){
+                res.json({
+                    message: ""
+                })
+            }
+            res.json({
+                message: "Fields of interest are not recieved"
+            });
+        }
+    }
+    catch(e){
+        res.json({
+            message: "Some error in the parsing"
+        });
+        console.log("error is", e);
+    }
+
+
 });
 
 module.exports = router;
