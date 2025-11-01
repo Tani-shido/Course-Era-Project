@@ -1,33 +1,8 @@
-// To Run Srever
-const express = require("express");
-const app = express();
-// To parse data from json 
-app.use(express.json());
-
+const express = require("express")
 const router = express.Router();
-
-// To validate data
-const { z, safeParse, array } = require("zod");
-
-// To return jwt as response
-const jwt = require("jsonwebtoken");   
-const JWT_SECRET_KEY = process.env.JWT_SECRET;
-
-// To incrypt data
-const bcrypt = require("bcrypt");
-
-// To store confidential info
-require("dotenv").config();
-
+const { z } = require("zod");
 const authMiddleware = require("../Middlewares/AuthMiddleware")
-
-// To save the data in DB
-const mongoose = require("mongoose");
 const { AccountModel } = require("../Models/AccountModel");
-const { error } = require("console");
-
-// To connect to DB
-mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully in FOI")).catch(err => console.error("DB connection error: ", err));
 
 // To get and validate, user ed-data
 const foiSchema = z.object({
@@ -39,32 +14,33 @@ router.put("/foi", authMiddleware , async (req, res) => {
     try{
         const fieldInfo = foiSchema.safeParse(req.body);
 
-        if(fieldInfo.success){
+        if(!fieldInfo.success){
             res.json({
                 message: "Fields of interest are not recieved"
             });
         }
         else{
-            console.log(fieldInfo.data);
-
             try{
-                const field = fieldInfo.data;
+                const field = fieldInfo.data.fields;
 
-                const AddField = await AccountModel.updateOne(req.user._id, {
+                console.log(field);
+
+                const AddField = await AccountModel.findByIdAndUpdate(req.user._id, {
                     $set: {
-                        "FieldOfInterest": field
+                        "FieldsOfInterest.interests": field
                     }
                 }, { new: true }).select("-password");
 
                 res.json({
                     message: "Field of interests are saved in DB",
-                    AddField
-                });
+                    user: AddField
+                }, console.log("FOI Added"));
 
             }catch(e){
-                res.json({
+                return res.json({
                     message: "Field of interests are not saved in DB"
-                });
+                },console.log(e));
+                
             }
         }
     }

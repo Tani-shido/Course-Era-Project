@@ -1,14 +1,6 @@
-const express = require("express");
-const app = express();
-app.use(express.json());
-
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET;
-
-const mongoose = require("mongoose");
 const { AccountModel } = require("../Models/AccountModel");
-
-mongoose.connect(process.env.MONGO_URL).then((console.log("DB connected sucessfully in auth middleware"))).catch(err => console.error("DB connection error: ", err));
 
 const authMiddleware = async (req, res, next) => {
     try{
@@ -17,15 +9,13 @@ const authMiddleware = async (req, res, next) => {
         
         const headerToken = req.headers.token;
 
-        console.log(headerToken);
+        console.log("Header Token is: ", headerToken);
         
-        if(!headerToken || !headerToken.startswith("Bearer ")){
-            res.json({
+        if(!headerToken ){
+            return res.json({
                 message: "token missing"
             });
-            console.log("token missing");
         }
-        else{
             
             console.log("headerToken is correct");
             
@@ -37,15 +27,15 @@ const authMiddleware = async (req, res, next) => {
                 
                 console.log("Decoded thing: ", decoded);
                 
-                req.user = AccountModel.findById(decoded.userId).select("-password");
+                req.user = await AccountModel.findById(decoded.userId).select("-password");
                 
-                console.log("This is the user: ", req.user.model);
+                console.log("This is the user: ", req.user);
                 
                 if(!req.user){
-                    res.json({
+                    return res.json({
                         message: "User not found"
-                    });
-                    console.log("User nahi mil raha");
+                    },console.log("User nahi mil raha"));
+                    
                 }
             }
             catch(e){
@@ -55,12 +45,12 @@ const authMiddleware = async (req, res, next) => {
             }
             
             next();
-        }
     }
     catch(e){
         res.json({
             message: "Authentication error ser"
         });
+        console.log(e);
     }
     
 

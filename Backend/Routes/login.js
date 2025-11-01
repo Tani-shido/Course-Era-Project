@@ -1,33 +1,10 @@
-// To Run Srever
 const express = require("express");
-const app = express();
-// To parse data from json 
-app.use(express.json());
-
 const router = express.Router();
-
-// To validate data
-const { z, safeParse } = require("zod");
-
-// To return jwt as response
+const { z } = require("zod");
 const jwt = require("jsonwebtoken");   
 const JWT_SECRET_KEY = process.env.JWT_SECRET;
-
-// To incrypt data
 const bcrypt = require("bcrypt");
-
-// To store confidential info
-require("dotenv").config();
-
-// To save the data in DB
-const mongoose = require("mongoose");
 const { AccountModel } = require("../Models/AccountModel");
-const { error } = require("console");
-// const MONGO_URL = process.env.MONGO_URL;
-
-// To connect to DB
-mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully in login")).catch(err => console.error("DB connection error: ", err));
-
 
 // To get and validate, LOGIN DATA
 const loginSchema = z.object({
@@ -60,8 +37,8 @@ router.post("/login", async(req, res) => {
 
                 const findUser = await AccountModel.findOne({
                     $or: [
-                        { email: emailName },
-                        { username: emailName }
+                        { "userDetails.email": emailName },
+                        { "userDetails.username": emailName }
                     ]
                 });
 
@@ -76,7 +53,7 @@ router.post("/login", async(req, res) => {
 
                     console.log("Before password check");
 
-                    const passCheck = await bcrypt.compare(password, findUser.password);
+                    const passCheck = await bcrypt.compare(password, findUser.userDetails.password);
 
                     if(!passCheck){
                         res.json({
@@ -93,9 +70,9 @@ router.post("/login", async(req, res) => {
                             message: "Congratulations! You are logged in",
                             token,
                             user: {
-                                id: findUser._id,
-                                username: findUser.username,
-                                role: findUser.role
+                                id: findUser.userDetails._id,
+                                username: findUser.userDetails.username,
+                                role: findUser.userDetails.role
                             }
                         });
                         console.log("Congratulations! You are logged in")
@@ -107,7 +84,7 @@ router.post("/login", async(req, res) => {
         res.json({
             message: "Parsing error"
         });
-        console.error("Parsing error", error);
+        console.log("Parsing error", e);
     }
 });
 

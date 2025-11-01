@@ -1,32 +1,10 @@
-// To Run Srever
 const express = require("express");
-const app = express();
-// To parse data from json 
-app.use(express.json());
-
 const router = express.Router();
-
-// To validate data
-const { z, safeParse } = require("zod");
-
-// To return jwt as response
+const { z } = require("zod");
 const jwt = require("jsonwebtoken");   
 const JWT_SECRET_KEY = process.env.JWT_SECRET;
-
-// To incrypt data
 const bcrypt = require("bcrypt");
-
-// To store confidential info
-require("dotenv").config();
-
-// To save the data in DB
-const mongoose = require("mongoose");
 const { AccountModel } = require("../Models/AccountModel");
-const { error } = require("console");
-// const MONGO_URL = process.env.MONGO_URL;
-
-// To connect to DB
-mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully in signup")).catch(err => console.error("DB connection error", err));
 
 // To get and validate Form data
 const formSchema = z.object({
@@ -62,7 +40,6 @@ router.post("/signup", async (req, res) => {
             const { email, password, username, dob, firstname, lastname, country, language, role } = result.data;
 
             const existingUser = await AccountModel.findOne({ email });
-            //  console.log("existing user: ", existingUser.username);
             if(existingUser){
                 if(existingUser.email === email){
                     res.json({
@@ -83,15 +60,17 @@ router.post("/signup", async (req, res) => {
                 
                 try{
                     const savingDetails =  await AccountModel.create({
-                        email,
-                        password: hashedPassword,
-                        username,
-                        dob,
-                        firstname,
-                        lastname,
-                        country,
-                        language,
-                        role
+                        userDetails: {
+                            email,
+                            password: hashedPassword,
+                            username,
+                            dob,
+                            firstname,
+                            lastname,
+                            country,
+                            language,
+                            role
+                        }
                     });
                     
                     console.log("After saving it in DB");

@@ -1,34 +1,8 @@
-// To Run Srever
 const express = require("express");
-const app = express();
-// To parse data from json 
-app.use(express.json());
-
 const router = express.Router();
-
-// To validate data
-const { z, safeParse } = require("zod");
-
-// To return jwt as response
-const jwt = require("jsonwebtoken");   
-const JWT_SECRET_KEY = process.env.JWT_SECRET;
-
-// To incrypt data
-const bcrypt = require("bcrypt");
-
-// To store confidential info
-require("dotenv").config();
-
+const { z } = require("zod");
 const authMiddleware = require("../Middlewares/AuthMiddleware")
-
-// To save the data in DB
-const mongoose = require("mongoose");
 const { AccountModel } = require("../Models/AccountModel");
-const { error } = require("console");
-
-// To connect to DB
-mongoose.connect(process.env.MONGO_URL).then(()=>console.log("DB connected sucessfully in User")).catch(err => console.error("DB connection error: ", err));
-
 // To get and validate, user ed-data
 const userEdDataSchema = z.object({
     nameOfInstitue: z.string().min(1),
@@ -53,7 +27,7 @@ router.put("/User-Info", authMiddleware , async (req, res) => {
             
                 const { nameOfInstitue, ifDroppedOrComplete, lastEducation, grade } = userEducation.data;
                 
-                const updatedUser = await AccountModel.updateOne(req.user._id, {
+                const updatedUser = await AccountModel.findByIdAndUpdate(req.user._id, {
                     $set: { 
                         "education.institute": nameOfInstitue,
                         "education.status": ifDroppedOrComplete,
