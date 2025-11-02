@@ -1,17 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { z } = require("zod");
-const authMiddleware = require("../Middlewares/AuthMiddleware")
+const authMiddleware = require("../Middlewares/AuthMiddleware");
+const creatorMiddleware = require("../Middlewares/CreatorsOnlyMiddleware");
 const { AccountModel } = require("../Models/AccountModel");
 
 
-// To get and validate, user ed-data
-const searchSchema = z.object({
-    fields: z.array(z.string().min(1)).min(3)
-});
-
-// Post route to get creator ed-info
-router.post("/upload/course", authMiddleware , async (req, res) => {
+// Post route to get upload course  
+router.post("/upload/course", authMiddleware , creatorMiddleware , async (req, res) => {
 
     const searchResult = searchSchema.safeParse(req.body);
 
@@ -20,6 +15,23 @@ router.post("/upload/course", authMiddleware , async (req, res) => {
             message: "Details are not recieved"
         });
     }
-    
+
     
 });
+
+// Post route to add a lesson in course
+router.post("/", async(req, res) => {
+
+});
+
+// Put Route to update the course
+router.put("/", async(req, res) => {
+
+});
+
+// Delete Route to delete the course
+router.delete("/", async(req, res) => {
+
+});
+
+module.exports = router;
