@@ -21,5 +21,4 @@ router.put("/foi", authMiddleware , async (req, res) => {
         });
     }
     
-    const link = fetch("https://cse.google.com/cse?cx=f55ef6d515552469a");
 });
