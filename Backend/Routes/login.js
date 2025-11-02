@@ -37,8 +37,8 @@ router.post("/login", async(req, res) => {
 
                 const findUser = await AccountModel.findOne({
                     $or: [
-                        { "userDetails.email": emailName },
-                        { "userDetails.username": emailName }
+                        { "email": emailName },
+                        { "username": emailName }
                     ]
                 });
 
@@ -53,7 +53,7 @@ router.post("/login", async(req, res) => {
 
                     console.log("Before password check");
 
-                    const passCheck = await bcrypt.compare(password, findUser.userDetails.password);
+                    const passCheck = await bcrypt.compare(password, findUser.password);
 
                     if(!passCheck){
                         res.json({
@@ -70,9 +70,9 @@ router.post("/login", async(req, res) => {
                             message: "Congratulations! You are logged in",
                             token,
                             user: {
-                                id: findUser.userDetails._id,
-                                username: findUser.userDetails.username,
-                                role: findUser.userDetails.role
+                                id: findUser._id,
+                                username: findUser.username,
+                                role: findUser.role
                             }
                         });
                         console.log("Congratulations! You are logged in")

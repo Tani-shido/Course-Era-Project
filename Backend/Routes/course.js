@@ -11,7 +11,7 @@ const searchSchema = z.object({
 });
 
 // Post route to get creator ed-info
-router.put("/foi", authMiddleware , async (req, res) => {
+router.post("/upload/course", authMiddleware , async (req, res) => {
 
     const searchResult = searchSchema.safeParse(req.body);
 
@@ -20,5 +20,6 @@ router.put("/foi", authMiddleware , async (req, res) => {
             message: "Details are not recieved"
         });
     }
+    
     
 });

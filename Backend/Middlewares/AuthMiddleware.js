@@ -7,13 +7,18 @@ const authMiddleware = async (req, res, next) => {
 
         console.log("auth middleware");
         
-        const headerToken = req.headers.token;
+        const headerToken = req.headers.authorization;
 
         console.log("Header Token is: ", headerToken);
         
-        if(!headerToken ){
+        if(!headerToken){
+            if(!authHeader.startsWith('Bearer ')){
+                return res.json({
+                    message: "Token is wrong formated"
+                });
+            }
             return res.json({
-                message: "token missing"
+                message: "Token missing"
             });
         }
             
@@ -37,14 +42,14 @@ const authMiddleware = async (req, res, next) => {
                     },console.log("User nahi mil raha"));
                     
                 }
+                next();
             }
             catch(e){
-                res.json({
+                return res.json({
                     message: "Token galat batara miya"
                 });
             }
             
-            next();
     }
     catch(e){
         res.json({

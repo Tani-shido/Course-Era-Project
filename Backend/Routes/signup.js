@@ -60,17 +60,15 @@ router.post("/signup", async (req, res) => {
                 
                 try{
                     const savingDetails =  await AccountModel.create({
-                        userDetails: {
-                            email,
-                            password: hashedPassword,
-                            username,
-                            dob,
-                            firstname,
-                            lastname,
-                            country,
-                            language,
-                            role
-                        }
+                        email,
+                        password: hashedPassword,
+                        username,
+                        dob,
+                        firstname,
+                        lastname,
+                        country,
+                        language,
+                        role
                     });
                     
                     console.log("After saving it in DB");
