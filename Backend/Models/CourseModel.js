@@ -13,10 +13,10 @@ const courseSchema = new Schema({
     title: {type: String, required: true},
     description: {type: String, required: true},
     price: {type: String, required: true},
-    thumbnailUrl: {typr: String},
+    thumbnailUrl: {type: String},
     instructor: {
         type: Schema.Types.ObjectId,
-        ref: AccountModel,
+        ref: "Account-info",
         required: true
     },
     isPublished:{type: Boolean, default: false},

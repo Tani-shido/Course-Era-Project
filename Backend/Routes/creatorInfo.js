@@ -13,6 +13,8 @@ const creatorEdDataSchema = z.object({
     currentOccupation: z.string().min(1)
 });
 
+// To parse data from json 
+(express.json());
 // Post route to get creator ed-info
 router.put("/creator-info", authMiddleware , async (req, res) => {
     const creatorEducation = creatorEdDataSchema.safeParse(req.body);

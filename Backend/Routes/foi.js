@@ -1,4 +1,4 @@
-const express = require("express")
+const express = require("express");
 const router = express.Router();
 const { z } = require("zod");
 const authMiddleware = require("../Middlewares/AuthMiddleware")
@@ -9,6 +9,8 @@ const foiSchema = z.object({
     fields: z.array(z.string().min(1)).min(3)
 });
 
+// To parse data from json 
+(express.json());
 // Post route to get creator ed-info
 router.put("/foi", authMiddleware , async (req, res) => {
     try{

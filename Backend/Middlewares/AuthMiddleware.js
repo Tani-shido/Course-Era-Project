@@ -12,7 +12,7 @@ const authMiddleware = async (req, res, next) => {
         console.log("Header Token is: ", headerToken);
         
         if(!headerToken){
-            if(!authHeader.startsWith('Bearer ')){
+            if(!headerToken.startsWith('Bearer ')){
                 return res.json({
                     message: "Token is wrong formated"
                 });
@@ -52,10 +52,10 @@ const authMiddleware = async (req, res, next) => {
             
     }
     catch(e){
+        console.error(e);
         res.json({
             message: "Authentication error ser"
         });
-        console.log(e);
     }
     
 

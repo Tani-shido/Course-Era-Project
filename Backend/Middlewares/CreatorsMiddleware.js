@@ -1,22 +1,18 @@
-const jwt = require("jsonwebtoken");
-const JWT_SECRET_KEY = process.env.JWT_SECRET;
-const { AccountModel } = require("../Models/AccountModel");
-
 const creatorMiddleware = async (req, res, next) => {
     try{
-        if(!req.user){
+        if(req.user && req.user.role === "creator"){
+            console.log("Creator Authentication check Passed");
+            next();
+        }
+        else{    
             return res.json({
                 message: "Creator not found"
             });
         }
-        else if(req.user.role === "creator"){
-            console.log("Creator Authentication Done");
-        }
-        next();
     }
     catch(e){
-        return res,json({
-            message: "Creator Authentication Failed"
+        return res.json({
+            message: "You are not a Creator. Authentication Failed!"
         })
     }
 }

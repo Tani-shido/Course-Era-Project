@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 // To parse data from json 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // To store confidential info
 require("dotenv").config();

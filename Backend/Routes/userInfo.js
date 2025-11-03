@@ -11,6 +11,8 @@ const userEdDataSchema = z.object({
     grade: z.string().min(1)
 });
 
+// To parse data from json 
+(express.json());
 //Post route to get user ed-info 
 router.put("/User-Info", authMiddleware , async (req, res) => {
     const userEducation = userEdDataSchema.safeParse(req.body);
