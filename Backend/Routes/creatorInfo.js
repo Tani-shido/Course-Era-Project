@@ -14,7 +14,7 @@ const creatorEdDataSchema = z.object({
 });
 
 // Post route to get creator ed-info
-router.put("/Creator-Info", authMiddleware , async (req, res) => {
+router.put("/creator-info", authMiddleware , async (req, res) => {
     const creatorEducation = creatorEdDataSchema.safeParse(req.body);
     
     if(!creatorEducation.success){

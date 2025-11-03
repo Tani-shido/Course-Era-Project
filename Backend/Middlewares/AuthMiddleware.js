@@ -34,7 +34,7 @@ const authMiddleware = async (req, res, next) => {
                 
                 req.user = await AccountModel.findById(decoded.userId).select("-password");
                 
-                console.log("This is the user: ", req.user);
+                console.log("Authentication check Passed, User name is : ", req.user.username);
                 
                 if(!req.user){
                     return res.json({

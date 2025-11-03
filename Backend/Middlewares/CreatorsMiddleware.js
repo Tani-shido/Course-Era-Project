@@ -4,12 +4,15 @@ const { AccountModel } = require("../Models/AccountModel");
 
 const creatorMiddleware = async (req, res, next) => {
     try{
-        if(req.user){
-            
+        if(!req.user){
             return res.json({
-                message: "Creator Authentication Done"
-            })
+                message: "Creator not found"
+            });
         }
+        else if(req.user.role === "creator"){
+            console.log("Creator Authentication Done");
+        }
+        next();
     }
     catch(e){
         return res,json({
