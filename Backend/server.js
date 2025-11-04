@@ -20,16 +20,16 @@ const loginRoute = require("./Routes/login.js");
 app.use("/auth", loginRoute);
 
 const userInfoRoute = require("./Routes/userInfo.js");
-app.use("/auth", userInfoRoute);
+app.use("/profile", userInfoRoute);
 
 const creatorInfoRoute = require("./Routes/creatorInfo.js");
-app.use("/auth", creatorInfoRoute);
+app.use("/profile", creatorInfoRoute);
 
 const foiRoute = require("./Routes/foi.js");
-app.use("/auth",  foiRoute);
+app.use("/profile",  foiRoute);
 
 const courseRoute = require("./Routes/course.js");
-app.use("/auth", courseRoute);
+app.use("/course", courseRoute);
 
 
 

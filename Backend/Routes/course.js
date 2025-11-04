@@ -7,7 +7,7 @@ const uploadMiddleware = require("../Middlewares/UploadMiddleware")
 const router = express.Router();
 
 // Post route to get upload course  
-router.post("/upload/course", authMiddleware , creatorMiddleware , uploadMiddleware , async (req, res) => {
+router.post("/upload", authMiddleware , creatorMiddleware , uploadMiddleware , async (req, res) => {
     try{
         if(!req.file){
             return res.json({
@@ -27,7 +27,7 @@ router.post("/upload/course", authMiddleware , creatorMiddleware , uploadMiddlew
     catch(e){
         return res.json({
             message: "File upload failed"
-        })
+        });
     }
 });
 
