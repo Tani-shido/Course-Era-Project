@@ -10,14 +10,14 @@ const upload = multer({
 
 const uploadMiddleware = (req, res, next) => {
 
-    console.log("=== UPLOAD MIDDLEWARE START ===");
+    console.log("UPLOAD MIDDLEWARE START");
 
     const SingleUpload = upload.single('file');
 
     SingleUpload(req, res, (err) => {
 
         if (err) {
-            console.error("=== UPLOAD MIDDLEWARE ERROR ===");
+            console.error("UPLOAD MIDDLEWARE ERROR");
             console.error("Error type:", err.constructor.name);
             console.error("Error message:", err.message);
             console.error("Full error:", err);
@@ -35,7 +35,7 @@ const uploadMiddleware = (req, res, next) => {
 
         }
 
-        console.log("=== UPLOAD MIDDLEWARE SUCCESS ===");
+        console.log("UPLOAD MIDDLEWARE SUCCESS");
         console.log("File received:", req.file ? "Yes" : "No");
 
         if(req.file){
