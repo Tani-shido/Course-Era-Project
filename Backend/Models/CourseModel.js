@@ -14,6 +14,7 @@ const courseSchema = new Schema({
     description: {type: String, required: true},
     price: {type: String, required: true},
     thumbnailUrl: {type: String},
+    thumbnailUrlId: {type: String},
     instructor: {
         type: Schema.Types.ObjectId,
         ref: "Account-info",

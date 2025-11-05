@@ -6,7 +6,7 @@ const { AccountModel } = require("../Models/AccountModel");
 // To get and validate, user ed-data
 const userEdDataSchema = z.object({
     nameOfInstitue: z.string().min(1),
-    ifDroppedOrComplete: z.enum(["Pursuing", "Dropped-Out", "Completed", "Others"]),
+    ifDroppedOrCompleted: z.enum(["Pursuing", "Dropped-Out", "Completed", "Others"]),
     lastEducation: z.string().min(1),
     grade: z.string().min(1)
 });
@@ -25,12 +25,12 @@ router.put("/user-info", authMiddleware , async (req, res) => {
         
         try{
             
-                const { nameOfInstitue, ifDroppedOrComplete, lastEducation, grade } = userEducation.data;
+                const { nameOfInstitue, ifDroppedOrCompleted, lastEducation, grade } = userEducation.data;
                 
                 const updatedUser = await AccountModel.findByIdAndUpdate(req.user._id, {
                     $set: { 
                         "education.institute": nameOfInstitue,
-                        "education.status": ifDroppedOrComplete,
+                        "education.status": ifDroppedOrCompleted,
                         "education.education": lastEducation,
                         "education.grade": grade
                     }
