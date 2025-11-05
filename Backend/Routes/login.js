@@ -12,8 +12,6 @@ const loginSchema = z.object({
     password: z.string().min(1)
 });
 
-// To parse data from json 
-(express.json());
 // login Post route: to take inputs, validate, generate jwt token, logs-in
 router.post("/login", async(req, res) => {
     try{

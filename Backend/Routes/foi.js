@@ -6,11 +6,9 @@ const { AccountModel } = require("../Models/AccountModel");
 
 // To get and validate, user ed-data
 const foiSchema = z.object({
-    fields: z.array(z.string().min(1)).min(3)
+    fields: z.array(z.string().min(1)).min(1)
 });
 
-// To parse data from json 
-(express.json());
 // Post route to get creator ed-info
 router.put("/foi", authMiddleware , async (req, res) => {
     try{
@@ -29,7 +27,7 @@ router.put("/foi", authMiddleware , async (req, res) => {
 
                 const AddField = await AccountModel.findByIdAndUpdate(req.user._id, {
                     $set: {
-                        "FieldsOfInterest.interests": field
+                        "fieldsOfInterest.interests": field
                     }
                 }, { new: true }).select("-password");
 

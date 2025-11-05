@@ -15,15 +15,16 @@ const Account = new Schema({
     language: {type: String},
     role: {type: String, required: true, enum: ['user', 'creator']},
     
-    education: {
-        institute: {type: String},
-        status: {type: String, enum: ["Pursuing", "Dropped-Out", "Completed", "Others"]},
-        education: {type: String},
-        grade: {type: String},
-        occupation: {type: String}
-    },
-    FieldsOfInterest: {
+    fieldsOfInterest: {
         interests: [{type: String}]
+    },
+
+    education: {
+        institute: {type: String, require: true},
+        education: {type: String, require: true},
+        status: {type: String, enum: ['Pursuing', 'Dropped-Out', 'Completed', 'Others']},
+        grade: {type: String, require: true},
+        occupation: {type: String, require: true}
     }
 }, {
     timestamps: true
@@ -33,3 +34,4 @@ const Account = new Schema({
 const AccountModel = mongoose.model("Account-info", Account);
 
 module.exports = { AccountModel }
+

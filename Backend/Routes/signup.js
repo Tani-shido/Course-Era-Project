@@ -19,8 +19,6 @@ const formSchema = z.object({
     role: z.enum(['user', 'creator'])
 });
 
-// To parse data from json 
-(express.json());
 // form-details Post route: to take form inputs, validate it, and saves it.
 router.post("/signup", async (req, res) => {
     try{
@@ -74,12 +72,9 @@ router.post("/signup", async (req, res) => {
                     });
                     
                     console.log("After saving it in DB");
-
-                    const token = jwt.sign({ userId: savingDetails._id }, JWT_SECRET_KEY, { expiresIn: '1d' })
                     
                     res.json({
-                        message: "Details recieved",
-                        token,
+                        message: "User Signed-up",
                         AccountModel:{
                             ObjectId: savingDetails._id, 
                             username: savingDetails.username,

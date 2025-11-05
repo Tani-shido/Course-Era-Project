@@ -7,18 +7,16 @@ const { AccountModel } = require("../Models/AccountModel");
 // To get and validate, user ed-data
 const creatorEdDataSchema = z.object({
     nameOfInstitue: z.string().min(1),
-    ifDroppedOrComplete: z.enum(["Pursuing", "Dropped-Out", "Completed", "Others"]),
     lastEducation: z.string().min(1),
+    ifDroppedOrCompleted: z.enum(['Pursuing', 'Dropped-Out', 'Completed', 'Others']),
     grade: z.string().min(1),
     currentOccupation: z.string().min(1)
 });
 
-// To parse data from json 
-(express.json());
 // Post route to get creator ed-info
 router.put("/creator-info", authMiddleware , async (req, res) => {
     const creatorEducation = creatorEdDataSchema.safeParse(req.body);
-    
+
     if(!creatorEducation.success){
         res.json({
             message: "Data not parsed sucessfully"
@@ -26,24 +24,25 @@ router.put("/creator-info", authMiddleware , async (req, res) => {
     }
     else{
         console.log(creatorEducation.data);
+        console.log(typeof(creatorEducation.data.grade));
         
         try{
             
-                const { nameOfInstitue, ifDroppedOrComplete, lastEducation, grade, currentOccupation } = creatorEducation.data;
-                
+                const { nameOfInstitue, ifDroppedOrCompleted, lastEducation, grade, currentOccupation } = creatorEducation.data;
+
                 const updatedCreator = await AccountModel.findByIdAndUpdate(req.user._id, {
                     $set: { 
                         "education.institute": nameOfInstitue,
-                        "education.status": ifDroppedOrComplete,
                         "education.education": lastEducation,
+                        "education.status": ifDroppedOrCompleted,
                         "education.grade": grade,
-                        "education.Occupation": currentOccupation
+                        "education.occupation": currentOccupation
                     }
             }, { new: true }).select("-password");
 
             res.json({
                 message: "Data parsed sucessfully",
-                user: updatedCreator
+                user: updatedCreator.education
             });
         }
 
