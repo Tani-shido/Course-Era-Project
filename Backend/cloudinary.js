@@ -18,7 +18,7 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: "course-era-project",
-        allowed_formats: ["jpeg", "png", "jpg", "mp4", "mp3"],
+        allowed_formats: ["jpeg", "png", "jpg", "mp4", "mp3", "pdf"],
         resource_type: "auto"
     }
 });

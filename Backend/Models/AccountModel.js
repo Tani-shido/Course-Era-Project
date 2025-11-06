@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const { string } = require("zod");
-
+const { courseModel } = require("./CourseModel")
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -25,6 +24,13 @@ const Account = new Schema({
         status: {type: String, enum: ['Pursuing', 'Dropped-Out', 'Completed', 'Others']},
         grade: {type: String, require: true},
         occupation: {type: String, require: true}
+    },
+    courses: {
+        course_ids: {
+            type: Schema.Types.ObjectId,
+            ref: "CourseModel",
+            required: true
+        }
     }
 }, {
     timestamps: true

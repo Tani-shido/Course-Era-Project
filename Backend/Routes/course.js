@@ -1,9 +1,10 @@
 const express = require("express");
-const { z } = require('zod');
+const { z, success } = require('zod');
 const authMiddleware = require("../Middlewares/AuthMiddleware");
 const creatorMiddleware = require("../Middlewares/CreatorsMiddleware");
 const uploadMiddleware = require("../Middlewares/UploadFileMiddleware");
 const { courseModel } = require("../Models/CourseModel");
+const { cloudinary } = require("../cloudinary");
 
 
 const router = express.Router();
@@ -35,8 +36,8 @@ router.post("/upload-file", authMiddleware , creatorMiddleware , uploadMiddlewar
     }
 });
 
-// courseInfoSchema to validate json course data
-const courseInfoSchema = z.object({
+// uploadInfoSchema to validate course data
+const uploadInfoSchema = z.object({
     title: z.string().min(1),
     description: z.string().min(1),
     price: z.number().min(1),
@@ -48,7 +49,7 @@ const courseInfoSchema = z.object({
 // Post route to upload course
 router.post("/upload-course", authMiddleware, creatorMiddleware, async(req, res) => {
     try{
-        const courseInfo = courseInfoSchema.safeParse(req.body);
+        const courseInfo = uploadInfoSchema.safeParse(req.body);
 
         if(!courseInfo.success){
             return res.json({
@@ -59,8 +60,6 @@ router.post("/upload-course", authMiddleware, creatorMiddleware, async(req, res)
         console.log("Data parsed successfully");
 
         const { title, description, price, isPublished, thumbnailUrl, thumbnailUrlId } = courseInfo.data;
-
-        
 
         const uploadCourse = await courseModel.create({
             title, description, price, isPublished, thumbnailUrl, thumbnailUrlId , instructor: req.user._id
@@ -81,17 +80,90 @@ router.post("/upload-course", authMiddleware, creatorMiddleware, async(req, res)
 });
 
 // // Put Route to update the course
-// router.put("/", async(req, res) => {
+router.put("/update-file", async(req, res) => {
+//  This is here too
+});
 
-// });
+// updateInfoSchema to validate updated course data
+const updateInfoSchema = z.object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    price: z.number().min(1),
+    isPublished: z.boolean().default(false),
+    thumbnailUrl: z.string().url(),
+    thumbnailUrlId: z.string().min(1)   
+});
+
+router.put("/update-course", authMiddleware, creatorMiddleware, async(req, res) => {
+    try{
+        const updateInfo = updateInfoSchema.safeParse(req.body);
+
+        if(!updateInfo.success){
+            return res.json({
+                message: "Info is not available or in wrong format"
+            });
+        }
+
+        const { title, description, price, isPublished, thumbnailUrl, thumbnailUrlId } = updateInfo.data;
+
+        const updatedInfo = await courseModel.findByIdAndUpdate(req.user._id,
+            {
+                $set: {
+                    title,
+                    description,
+                    price,
+                    isPublished,
+                    thumbnailUrl,
+                    thumbnailUrlId 
+                }
+            }, { new: true }
+        );
+
+        return res.json({
+            message: "Course Updated Successfully!",
+            Course: updatedInfo
+
+        }, console.log("It's Updated"));
+    }
+    catch(e){
+        return res.json({
+            message: ""
+        });
+    }
+
+});
+
+// Delete Route to delete the file
+router.delete("/delete/file", authMiddleware, creatorMiddleware, async(req, res) => {
+    try{
+
+        const public_id = await courseModel.findById({
+            instructor: req.user._id
+        });
+
+        const deleteFile = await cloudinary.uploader.destroy(public_id);
+    }
+    catch(e){
+        return res.json({
+            message: "File not Deleted"
+        })
+    }
+});
 
 // // Delete Route to delete the course
-// router.delete("/", async(req, res) => {
-
-// });
+router.delete("/delete-course", authMiddleware, creatorMiddleware, async(req, res) => {
+    try{
+        const deleteCourse = await courseModel.findByIdAndDelete(req.user._id);
+        return res.json({
+            message: "Course Deleted"
+        });
+    }
+    catch(e){
+        return res.json({
+            message: "Course Not Deleted"
+        });
+    }
+});
 
 module.exports = router;
 
-
-// https://res.cloudinary.com/dvtvxtya6/image/upload/v1762342050/course-era-project/trkei6k2xpzz0hpodb7x.png
-// course-era-project/trkei6k2xpzz0hpodb7x

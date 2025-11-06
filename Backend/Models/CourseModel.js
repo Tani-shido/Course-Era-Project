@@ -23,9 +23,9 @@ const courseSchema = new Schema({
     isPublished:{type: Boolean, default: false},
     lessons:[lessonSchema]
 
-}, { timestamps:true });
+}, { timestamps: true });
 
-const courseModel = mongoose.model("Course-info", courseSchema);
+const courseModel = mongoose.model("CourseModel", courseSchema);
 
 module.exports = { courseModel }
 
