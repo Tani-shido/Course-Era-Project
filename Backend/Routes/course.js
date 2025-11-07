@@ -1,5 +1,5 @@
 const express = require("express");
-const { z, success } = require('zod');
+const { z } = require('zod');
 const authMiddleware = require("../Middlewares/AuthMiddleware");
 const creatorMiddleware = require("../Middlewares/CreatorsMiddleware");
 const uploadMiddleware = require("../Middlewares/UploadFileMiddleware");
@@ -94,40 +94,54 @@ const updateInfoSchema = z.object({
     thumbnailUrlId: z.string().min(1)   
 });
 
-router.put("/update-course", authMiddleware, creatorMiddleware, async(req, res) => {
+router.put("/update-course/:courseId", authMiddleware, creatorMiddleware, async(req, res) => {
     try{
         const updateInfo = updateInfoSchema.safeParse(req.body);
+        const courseId = req.params.courseId;
 
         if(!updateInfo.success){
             return res.json({
                 message: "Info is not available or in wrong format"
             });
+        }else if(!courseId){
+            console.log("course ID is: ", courseId);
+            return res.json({
+                message: "Course Id not received"
+            });
         }
 
         const { title, description, price, isPublished, thumbnailUrl, thumbnailUrlId } = updateInfo.data;
 
-        const updatedInfo = await courseModel.findByIdAndUpdate(req.user._id,
-            {
-                $set: {
-                    title,
-                    description,
-                    price,
-                    isPublished,
-                    thumbnailUrl,
-                    thumbnailUrlId 
-                }
-            }, { new: true }
-        );
+        try{
 
-        return res.json({
-            message: "Course Updated Successfully!",
-            Course: updatedInfo
-
-        }, console.log("It's Updated"));
+            const updatedInfo = await courseModel.findByIdAndUpdate(courseId,
+                {
+                    $set: {
+                        title,
+                        description,
+                        price,
+                        isPublished,
+                        thumbnailUrl,
+                        thumbnailUrlId 
+                    }
+                }, { new: true }
+            );
+            
+            return res.json({
+                message: "Course Updated Successfully!",
+                Course: updatedInfo
+                
+            }, console.log("It's Updated"));
+        }
+        catch(e){
+            return res.json({
+                message: "Course not found in DB"
+            },console.log(e));
+        }
     }
     catch(e){
         return res.json({
-            message: ""
+            message: "Course Not Update"
         });
     }
 
@@ -167,3 +181,9 @@ router.delete("/delete-course", authMiddleware, creatorMiddleware, async(req, re
 
 module.exports = router;
 
+// add course_ids in creator schema
+// then use it to find file's public_id
+// delete course from mongo db
+// delete cloudinary file too
+
+// check if duplicate course is not uploaded (link should be different) *Debatable
