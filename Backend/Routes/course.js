@@ -165,9 +165,22 @@ router.delete("/delete/file", authMiddleware, creatorMiddleware, async(req, res)
 });
 
 // // Delete Route to delete the course
-router.delete("/delete-course", authMiddleware, creatorMiddleware, async(req, res) => {
+router.delete("/delete-course/:courseId", authMiddleware, creatorMiddleware, async(req, res) => {
     try{
-        const deleteCourse = await courseModel.findByIdAndDelete(req.user._id);
+
+        console.log("hi there");
+        
+        const courseId = req.params.courseId;
+        
+        console.log("Course Id is: ", courseId);
+
+        const deleteCourse = await courseModel.findByIdAndDelete(courseId);
+
+        if(!deleteCourse){
+            return res.json({
+                message: "Course not found"
+            });
+        }
         return res.json({
             message: "Course Deleted"
         });

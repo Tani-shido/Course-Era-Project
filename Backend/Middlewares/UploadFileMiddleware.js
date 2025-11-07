@@ -11,7 +11,7 @@ const upload = multer({
 const uploadMiddleware = (req, res, next) => {
 
     console.log("UPLOAD MIDDLEWARE START");
-
+    
     const SingleUpload = upload.single('file');
 
     SingleUpload(req, res, (err) => {
