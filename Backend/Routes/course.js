@@ -3,6 +3,7 @@ const { z } = require('zod');
 const authMiddleware = require("../Middlewares/AuthMiddleware");
 const creatorMiddleware = require("../Middlewares/CreatorsMiddleware");
 const uploadMiddleware = require("../Middlewares/UploadFileMiddleware");
+const updateMiddleware = require("../Middlewares/UpdateFileMiddleware")
 const { courseModel } = require("../Models/CourseModel");
 const { cloudinary } = require("../cloudinary");
 
@@ -80,7 +81,7 @@ router.post("/upload-course", authMiddleware, creatorMiddleware, async(req, res)
 });
 
 // // Put Route to update the course
-router.put("/update-file", async(req, res) => {
+router.put("/update-file", authMiddleware, creatorMiddleware, updateMiddleware , async(req, res) => {
 //  This is here too
 });
 

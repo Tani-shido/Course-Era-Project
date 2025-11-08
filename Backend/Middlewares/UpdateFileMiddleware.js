@@ -1,4 +1,10 @@
 const multer = require("multer");
 const { storage } = require("../cloudinary");
 
-const update = cloudinary.uploader.upload("")
+cloudinary.uploader.upload("")
+
+const updateMiddleware = async(req, res) => {
+    console.log("hi there");
+} 
+
+module.exports = updateMiddleware;
