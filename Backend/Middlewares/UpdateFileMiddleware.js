@@ -4,7 +4,7 @@ const { storage } = require("../cloudinary");
 cloudinary.uploader.upload("")
 
 const updateMiddleware = async(req, res) => {
-    console.log("hi there");
+    console.log("");
 } 
 
 module.exports = updateMiddleware;
