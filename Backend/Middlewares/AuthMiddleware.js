@@ -29,6 +29,13 @@ const authMiddleware = async (req, res, next) => {
             try{
                 
                 const decoded = jwt.verify(token, JWT_SECRET_KEY);
+
+                if(!decoded){
+                    return res.json({
+                        message: "User not found, Token not decoded"
+                    },console.log("User nahi mil raha"));
+                    
+                }
                 
                 console.log("Decoded thing: ", decoded);
                 

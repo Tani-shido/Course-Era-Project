@@ -28,8 +28,17 @@ app.use("/profile", creatorInfoRoute);
 const foiRoute = require("./Routes/foi.js");
 app.use("/profile",  foiRoute);
 
-const courseRoute = require("./Routes/course.js");
-app.use("/course", courseRoute);
+// const courseRoute = require("./Routes/course.js");
+// app.use("/course", courseRoute);
+
+const uploadCourseRoute = require("./Routes/uploadCourse.js");
+app.use("/course", uploadCourseRoute);
+
+const updateCourseRoute = require("./Routes/updateCourse.js");
+app.use("/course", updateCourseRoute);
+
+const deleteCourseRoute = require("./Routes/deleteCourse.js");
+app.use("/course", deleteCourseRoute);
 
 
 

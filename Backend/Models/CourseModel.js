@@ -12,7 +12,7 @@ const lessonSchema = new Schema({
 const courseSchema = new Schema({
     title: {type: String, required: true},
     description: {type: String, required: true},
-    price: {type: String, required: true},
+    price: {type: Number, required: true},
     thumbnailUrl: {type: String},
     thumbnailUrlId: {type: String},
     instructor: {
@@ -25,7 +25,7 @@ const courseSchema = new Schema({
 
 }, { timestamps: true });
 
-const courseModel = mongoose.model("CourseModel", courseSchema);
+const CourseModel = mongoose.model("CourseModel", courseSchema);
 
-module.exports = { courseModel }
+module.exports = { CourseModel }
 
