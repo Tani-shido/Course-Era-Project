@@ -16,11 +16,6 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
     try{
         const public_id = publicId;
 
-        console.log(public_id);
-
-        const updatedUpload = await cloudinary.uploader.upload("file", { public_id });
-        
-
 
         res.json({
             message: "Passed"
