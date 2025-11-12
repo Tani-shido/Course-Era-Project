@@ -19,7 +19,7 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
 
         res.json({
             message: "Passed"
-        })
+        });
     }
     catch(e){
         res.json({
@@ -39,6 +39,7 @@ const updateInfoSchema = z.object({
     thumbnailUrlId: z.string().min(1)   
 });
 
+// Route to update course in DB
 router.put("/update-course", authMiddleware, creatorMiddleware, async(req, res) => {
     try{
         const updateInfo = updateInfoSchema.safeParse(req.body);
