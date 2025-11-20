@@ -18,12 +18,12 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
 
 
         res.json({
-            message: "Passed! content Updated."
+            message: "content Updated."
         });
     }
     catch(e){
         res.json({
-            message: "Failed! content Not Updated."
+            message: "content Not Updated."
         });
     }
 
