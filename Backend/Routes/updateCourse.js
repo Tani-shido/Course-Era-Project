@@ -15,7 +15,11 @@ const router = express.Router();
 router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMiddleware , async(req, res) => {
     try{
         const public_id = publicId;
-
+        if(!public_id){
+            res.json({
+                message: "public_id not found."
+            })    
+        }
 
         res.json({
             message: "content Updated."
