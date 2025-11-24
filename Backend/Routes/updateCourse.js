@@ -22,7 +22,7 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
             })    
         }
 
-        // yaha logic add karna hai
+        
 
         res.json({
             message: "content Updated."
