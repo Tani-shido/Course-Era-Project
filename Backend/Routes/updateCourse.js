@@ -22,7 +22,7 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
             })    
         }
 
-        
+        console.log(public_id);
 
         res.json({
             message: "content Updated."
