@@ -22,7 +22,7 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
             })    
         }
 
-        console.log("Public id is : ", public_id);
+        // console.log("Public id is : ", public_id);
 
         res.json({
             message: "content Updated."
