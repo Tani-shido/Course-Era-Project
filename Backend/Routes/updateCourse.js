@@ -11,7 +11,7 @@ const { cloudinary } = require("../cloudinary");
 const router = express.Router();
 
 
-// // Put Route to update the course
+// // Put Route to update the course file
 router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMiddleware , async(req, res) => {
     try{
         const public_id = publicId;
