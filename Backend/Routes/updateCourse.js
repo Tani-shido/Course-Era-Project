@@ -19,8 +19,10 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
         if(!public_id){
             res.json({
                 message: "public_id not found."
-            })    
+            });
         }
+
+        // Logic is missing
 
         console.log("Public id is : ", public_id);
 
