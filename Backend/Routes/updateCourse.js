@@ -22,7 +22,7 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
             });
         }
 
-        // Logic will be added soon
+        
 
         console.log("Public id is : ", public_id);
 
