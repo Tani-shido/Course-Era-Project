@@ -22,7 +22,7 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
             });
         }
 
-        
+        // Last thing in the db
 
         console.log("Public id is : ", public_id);
 
