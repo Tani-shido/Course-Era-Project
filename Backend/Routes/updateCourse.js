@@ -11,6 +11,8 @@ const { cloudinary } = require("../cloudinary");
 const router = express.Router();
 
 
+// updateFileSchema to validate 
+
 // // Put Route to update the course file
 router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMiddleware , async(req, res) => {
     try{
@@ -22,7 +24,11 @@ router.put("/update-file/:courseId", authMiddleware, creatorMiddleware, courseMi
             });
         }
 
-        // Last thing in the db
+        cloudinary.uploader.upload(filePath, {
+            public_id: public_id,
+            overwrite: true,
+            invalidate: true
+        })
 
         console.log("Public id is : ", public_id);
 
